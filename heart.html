@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Heart Animation</title>
+  <style>
+     body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      margin: 0;
+      flex-direction: column;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .content-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 100px; /* Space between images and center content */
+      width: 100%;
+    }
+
+    .side-image {
+      width: 200px; /* Adjust size as needed */
+      height: 200px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .center-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .message {
+      font-family: 'Arial', sans-serif;
+      color: #ff4757;
+      text-align: center;
+      font-size: 24px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;  /* Added margin */
+    }
+
+    .instruction {
+      font-family: 'Arial', sans-serif;
+      color: #ff6b6b;
+      font-size: 16px;
+      margin-top: 20px;  /* Increased from 15px to 20px */
+    }
+
+    .heart {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      transform: rotate(-45deg);
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      background: linear-gradient(45deg, #ff6b6b, #ff4757);
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(45deg, #ff6b6b, #ff4757);
+      border-radius: 50%;
+      box-shadow: 0 0 40px rgba(255, 105, 105, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .heart::before {
+      top: -30px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 30px;
+      top: 0;
+    }
+
+    .heart:hover {
+      transform: rotate(-45deg) scale(1.1);
+    }
+
+    @keyframes beat {
+      0% {
+        transform: rotate(-45deg) scale(1);
+      }
+      25% {
+        transform: rotate(-45deg) scale(1.3);
+      }
+      50% {
+        transform: rotate(-45deg) scale(1);
+      }
+      75% {
+        transform: rotate(-45deg) scale(1.3);
+      }
+      100% {
+        transform: rotate(-45deg) scale(1);
+      }
+    }
+
+    .beating {
+      animation: beat 1s ease infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content-wrapper">
+      <img src="photo1.jpg" alt="Left Image" class="side-image">
+      <div class="center-content">
+        <div class="message">Happy Monthsary My Baby</div>
+        <div class="heart"></div>
+        <div class="instruction">pls tap the heart</div>
+      </div>
+      <img src="photo2.jpg" alt="Right Image" class="side-image">
+    </div>
+  </div>
+  <!-- ... existing script ... -->
+
+  <script>
+    const heart = document.querySelector('.heart');
+    heart.addEventListener('click', () => {
+      if (heart.classList.contains('beating')) {
+        heart.classList.remove('beating');
+      } else {
+        heart.classList.add('beating');
+      }
+    });
+  </script>
+</body>
+</html>
