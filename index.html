@@ -13,103 +13,140 @@
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
       margin: 0;
       padding: 20px;
+      font-family: 'Arial', sans-serif;
     }
 
     .container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 30px;
+      gap: 50px;
       width: 100%;
-      max-width: 600px;
+      max-width: 800px;
     }
 
     .center-content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 30px;
+      gap: 40px;
       width: 100%;
     }
 
     .message {
-      font-family: 'Arial', sans-serif;
       color: #ff4757;
       text-align: center;
-      font-size: clamp(20px, 5vw, 24px);
+      font-size: clamp(24px, 5vw, 32px);
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      font-weight: bold;
     }
 
     .instruction {
-      font-family: 'Arial', sans-serif;
       color: #ff6b6b;
-      font-size: clamp(14px, 4vw, 16px);
+      font-size: clamp(16px, 4vw, 20px);
       text-align: center;
     }
 
     .heart {
       position: relative;
-      width: 60px;
-      height: 60px;
+      width: 80px;
+      height: 80px;
       transform: rotate(-45deg);
       cursor: pointer;
       transition: transform 0.3s ease;
       background: linear-gradient(45deg, #ff6b6b, #ff4757);
+      box-shadow: 0 0 30px rgba(255, 105, 105, 0.3);
     }
 
     .heart::before,
     .heart::after {
       content: "";
       position: absolute;
-      width: 60px;
-      height: 60px;
-      background: linear-gradient(45deg, #ff6b6b, #ff4757);
+      width: 80px;
+      height: 80px;
+      background: inherit;
       border-radius: 50%;
-      box-shadow: 0 0 40px rgba(255, 105, 105, 0.3);
-      transition: all 0.3s ease;
+      box-shadow: inherit;
     }
 
     .heart::before {
-      top: -30px;
+      top: -40px;
       left: 0;
     }
 
     .heart::after {
-      left: 30px;
+      left: 40px;
       top: 0;
     }
 
     .images-container {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
+      justify-content: space-between;
+      gap: 60px;
       width: 100%;
+      margin-top: 20px;
     }
 
     .side-image {
-      width: 150px;
-      height: 150px;
-      border-radius: 10px;
+      width: 250px;
+      height: 250px;
       object-fit: cover;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .side-image:hover {
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      text-align: center;
+      color: #ff4757;
+      font-size: 24px;
+      font-weight: bold;
+      animation: popIn 0.4s ease-out;
+    }
+
+    @keyframes popIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
     }
 
     @keyframes beat {
       0% { transform: rotate(-45deg) scale(1); }
-      25% { transform: rotate(-45deg) scale(1.3); }
-      50% { transform: rotate(-45deg) scale(1); }
-      75% { transform: rotate(-45deg) scale(1.3); }
+      50% { transform: rotate(-45deg) scale(1.3); }
       100% { transform: rotate(-45deg) scale(1); }
     }
 
     .beating {
-      animation: beat 1s ease infinite;
+      animation: beat 0.8s ease-in-out infinite;
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       .side-image {
-        width: 120px;
-        height: 120px;
+        width: 150px;
+        height: 150px;
+      }
+      .images-container {
+        gap: 30px;
       }
     }
   </style>
@@ -117,20 +154,63 @@
 <body>
   <div class="container">
     <div class="center-content">
-      <div class="message">Happy Monthsary My Baby</div>
+      <div class="message">Happy Monthsary My Baby ❤️</div>
       <div class="heart"></div>
-      <div class="instruction">pls tap the heart</div>
+      <div class="instruction">Tap the heart for a surprise!</div>
     </div>
     <div class="images-container">
-      <img src="photo1.jpg" alt="Left Image" class="side-image">
-      <img src="photo2.jpg" alt="Right Image" class="side-image">
+      <img src="photo2.jpg" alt="Our Memory" class="side-image">
+      <img src="photo1.jpg" alt="Our Memory" class="side-image">
     </div>
   </div>
 
+  <div class="popup" id="messagePopup">
+    I Love You So Much My Baby ❤️
+  </div>
+
+ <audio id="backgroundMusic" preload="auto" loop>
+    <source src="./music.mp3" type="audio/mpeg">
+    <!-- Remove WAV source since we're using MP3 -->
+    Your browser does not support the audio element.
+</audio>
+
   <script>
     const heart = document.querySelector('.heart');
+    const popup = document.getElementById('messagePopup');
+    const audio = document.getElementById('backgroundMusic');
+    let isMusicPlaying = false;
+function playMusic() {
+    if (!isMusicPlaying) {
+        console.log("Attempting to play music...");
+        audio.load(); // Force reload the audio
+        audio.currentTime = 51;
+        audio.play().then(() => {
+            console.log("Music started successfully");
+            isMusicPlaying = true;
+        }).catch(error => {
+            console.error("Audio playback failed:", error);
+        });
+    }
+}
+
+// Add these event listeners for debugging
+audio.addEventListener('loadeddata', () => {
+    console.log("Audio file loaded successfully");
+});
+
+audio.addEventListener('error', (e) => {
+    console.error("Audio loading error:", e.target.error);
+});
+
+    // Try to start music on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(playMusic, 1000);
+    });
+
     heart.addEventListener('click', () => {
       heart.classList.toggle('beating');
+      popup.style.display = 'block';
+      playMusic();
     });
   </script>
 </body>
